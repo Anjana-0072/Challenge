@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clothing Store Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .dashboard {
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+    }
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .filter-bar input,
+    .filter-bar select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      min-width: 200px;
+    }
+    .stats {
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .product-info {
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .stock {
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+    .in-stock {
+      color: green;
+    }
+    .out-of-stock {
+      color: red;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1rem;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🛍️ Clothing Store Dashboard</h1>
+  </header>
+
+  <div class="dashboard">
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="Search clothes..." />
+      <select id="categoryFilter">
+        <option value="All">All Categories</option>
+        <option value="Men">Men</option>
+        <option value="Women">Women</option>
+        <option value="Kids">Kids</option>
+        <option value="Accessories">Accessories</option>
+      </select>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
+  <footer>
+    &copy; 2025 Stylish Threads Clothing Co.
+  </footer>
+
+  <script>
+    const products = [
+      { id: 1, name: "Men's T-Shirt", category: "Men", stock: 12 },
+      { id: 2, name: "Women's Denim Jacket", category: "Women", stock: 0 },
+      { id: 3, name: "Kids Hoodie", category: "Kids", stock: 5 },
+      { id: 4, name: "Men's Jeans", category: "Men", stock: 3 },
+      { id: 5, name: "Women's Dress", category: "Women", stock: 8 },
+      { id: 6, name: "Kids Sneakers", category: "Kids", stock: 0 },
+      { id: 7, name: "Baseball Cap", category: "Accessories", stock: 15 },
+      { id: 8, name: "Leather Belt", category: "Accessories", stock: 4 },
+      { id: 9, name: "Women's Sunglasses", category: "Accessories", stock: 7 },
+      { id: 10, name: "Men's Formal Shirt", category: "Men", stock: 0 },
+    ];
+
+    const productGrid = document.getElementById("productGrid");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const statsDisplay = document.getElementById("stats");
+
+    function renderProducts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedCategory = categoryFilter.value;
+
+      const filteredProducts = products.filter(product => {
+        const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+        return matchesCategory && matchesSearch;
+      });
+
+      productGrid.innerHTML = "";
+
+      filteredProducts.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+          <div class="product-name">${product.name}</div>
+          <div class="product-info">Category: ${product.category}</div>
+          <div class="stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+            ${product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+          </div>
+        `;
+
+        productGrid.appendChild(card);
+      });
+
+      statsDisplay.textContent = `Showing ${filteredProducts.length} item(s)`;
+    }
+
+    searchInput.addEventListener("input", renderProducts);
+    categoryFilter.addEventListener("change", renderProducts);
+
+    // Initial render
+    renderProducts();
+  </script>
+</body>
+</html>
